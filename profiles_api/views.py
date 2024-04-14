@@ -3,9 +3,12 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import viewsets
+from rest_framework.authentication import TokenAuthentication
 
 from profiles_api import serializers
-# Create your views here.
+from profiles_api import models
+from profiles_api import permissions
+
 
 class HelloAPiView(APIView):
     """ApI view test class"""
@@ -102,3 +105,11 @@ class HelloViewSet(viewsets.ViewSet):
         """To Delete an object based obj pk (Patch update)"""
         return Response({'http_method': 'DELETE'})
     
+
+class UserProfileViewSet(viewsets.ModelViewSet):
+    """Creating and Updating User Profile"""
+
+    serializer_class = serializers.UserProfileSerializer
+    queryset = models.UserProfile.objects.all()
+    authentication_classes = (TokenAuthentication, )
+    permission_classes = (permissions.UpdateOwnProfile, )
